@@ -22,9 +22,11 @@ client.connect()
     .then(client => {
         console.log('Connected to MongoDB Atlas successfully');
         db = client.db('kidscorner');
+        res.send('mongo connected')
     })
     .catch((err) => {
         console.error('Error connecting to MongoDB Atlas', err);
+        res.send(err)
     });
 
 const razorpay = new Razorpay({
