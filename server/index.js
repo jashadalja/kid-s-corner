@@ -3,9 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const Razorpay = require("razorpay");
-const { ObjectId } = require("mongodb");
 const crypto = require("crypto");
 
 const app = express();
@@ -13,123 +12,111 @@ app.use(cors());
 app.use(express.json());
 
 const uri = process.env.MONGO_URL;
-
 let db;
 
-const client = new MongoClient(uri);
-
-client
-  .connect()
-  .then((client) => {
+// Initialize MongoDB connection
+async function initializeDB() {
+  try {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+    await client.connect();
     console.log("Connected to MongoDB Atlas successfully");
     db = client.db("kidscorner");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB Atlas", err);
-  });
+  } catch (error) {
+    console.error("Error connecting to MongoDB Atlas:", error);
+    process.exit(1);  // Exit process if MongoDB connection fails
+  }
+}
 
+// Razorpay setup
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-app.post("/create-order", async (req, res) => {
+// Middleware to ensure DB connection
+function ensureDBConnection(req, res, next) {
+  if (!db) {
+    return res.status(500).json({ error: "Database not connected" });
+  }
+  next();
+}
+
+// Routes
+app.post("/create-order", async (req, res, next) => {
   const { amount, currency, receipt } = req.body;
 
   try {
-    const order = await razorpay.orders.create({
-      amount: amount,
-      currency,
-      receipt,
-    });
+    const order = await razorpay.orders.create({ amount, currency, receipt });
     res.json(order);
   } catch (error) {
-    console.error("Error creating order:", error);
-    res.status(400).send({
-      error: "Failed to create order",
-      details: error,
-    });
+    next(error);  // Pass error to global error handler
   }
 });
 
 app.post("/verify-payment", (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    req.body;
-
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
   const secretKey = "0ZiI8iZ185Dx20ZY9S1Mck12";
-
+  
   const hmac = crypto.createHmac("sha256", secretKey);
-  hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+  hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+  
   const generated_signature = hmac.digest("hex");
 
   if (generated_signature === razorpay_signature) {
-    res.send({ status: "success" });
+    res.json({ status: "success" });
   } else {
-    res.send({ status: "failure" });
+    res.json({ status: "failure" });
   }
 });
 
-app.get("/animals", async (req, res) => {
+// Apply DB connection check for the following routes
+app.use(ensureDBConnection);
+
+app.get("/animals", async (req, res, next) => {
   try {
     const animalsCollection = db.collection("animals");
-    const animalData = await animalsCollection.findOne(
-      {},
-      {
-        projection: {
-          tortoise: 1,
-          cow: 1,
-          fish: 1,
-          frog: 1,
-          horse: 1,
-          lion: 1,
-        },
-      }
-    );
+    const animalData = await animalsCollection.findOne({}, {
+      projection: { tortoise: 1, cow: 1, fish: 1, frog: 1, horse: 1, lion: 1 },
+    });
 
     if (!animalData) {
       return res.status(404).json({ message: "No animals found" });
     }
 
     res.json({ result: animalData });
-  } catch (err) {
-    console.error("Error fetching data from MongoDB:", err);
-    res.status(500).send("Error fetching data");
+  } catch (error) {
+    next(error);
   }
 });
 
-app.get("/shopping", async (req, res) => {
+app.get("/shopping", async (req, res, next) => {
   try {
     const productsCollection = db.collection("products");
     const products = await productsCollection.find({}).toArray();
-    //   console.log(products)
     res.json({ result: products });
-  } catch (err) {
-    console.error("Error fetching product data from MongoDB:", err);
-    res.status(500).send("Error fetching product data");
+  } catch (error) {
+    next(error);
   }
 });
 
-app.post("/getproduct", async (req, res) => {
+app.post("/getproduct", async (req, res, next) => {
   const productId = req.body.id;
-  console.log(productId);
+
   try {
     const productsCollection = db.collection("products");
-    const product = await productsCollection.findOne({
-      _id: new ObjectId(productId),
-    });
-    console.log(product);
-    if (product) {
-      res.json({ result: product });
-    } else {
-      res.status(404).json({ message: "Product not found" });
+    const product = await productsCollection.findOne({ _id: new ObjectId(productId) });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
-  } catch (err) {
-    console.error("Error fetching product from MongoDB:", err);
-    res.status(500).json({ message: "Error fetching product" });
+
+    res.json({ result: product });
+  } catch (error) {
+    next(error);
   }
 });
 
-app.post("/buy-product", async (req, res) => {
+app.post("/buy-product", async (req, res, next) => {
   const { id, name1, mobile1, address, quantity, priceT, c, email } = req.body;
 
   try {
@@ -146,17 +133,21 @@ app.post("/buy-product", async (req, res) => {
     };
 
     const result = await ordersCollection.insertOne(order);
-
-    res.json({
-      message: "Order placed successfully",
-      orderId: result.insertedId,
-    });
-  } catch (err) {
-    console.error("Error processing order:", err);
-    res.status(500).json({ message: "Error processing order" });
+    res.json({ message: "Order placed successfully", orderId: result.insertedId });
+  } catch (error) {
+    next(error);
   }
 });
 
-app.listen(3001, () => {
-  console.log("server is running on 3001");
+// Global error handler middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({ error: "Internal Server Error", details: err.message });
+});
+
+// Start server after DB connection is ready
+initializeDB().then(() => {
+  app.listen(3001, () => {
+    console.log("Server is running on port 3001");
+  });
 });
