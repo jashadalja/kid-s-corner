@@ -8,15 +8,8 @@ const Razorpay = require("razorpay");
 const { ObjectId } = require("mongodb");
 const crypto = require("crypto");
 
-const corsOptions = {
-  origin: "https://kidscorner.vercel.app", // replace with your frontend URL if deployed
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  preflightContinue: false,
-};
-
 const app = express();
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 const uri = process.env.MONGO_URL; // Use environment variable for MongoDB URL
@@ -30,11 +23,9 @@ client
   .then((client) => {
     console.log("Connected to MongoDB Atlas successfully");
     db = client.db("kidscorner");
-    res.send("mongo connected");
   })
   .catch((err) => {
     console.error("Error connecting to MongoDB Atlas", err);
-    res.send(err);
   });
 
 const razorpay = new Razorpay({
