@@ -33,23 +33,23 @@ const ProductDetails = () => {
 
     useEffect(() => {
         const fetchProduct = async () => {
-          try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/getproduct/`, { id: productId });
-            setProduct(response.data.result);
-            console.log(productId)
-            // console.log(response.data.result);
-            setTotalPrice(response.data.result.price); // Set initial total price
-          } catch (err) {
-            console.error('Error fetching product details:', err);
-            setError('Failed to load product details');
-          } finally {
-            setLoading(false);
-          }
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/getproduct/`, { id: productId });
+                setProduct(response.data.result);
+                console.log(productId)
+                // console.log(response.data.result);
+                setTotalPrice(response.data.result.price); // Set initial total price
+            } catch (err) {
+                console.error('Error fetching product details:', err);
+                setError('Failed to load product details');
+            } finally {
+                setLoading(false);
+            }
         };
-    
+
         fetchProduct();
-      }, [productId]);
-    
+    }, [productId]);
+
 
     const handleQuantityChange = (change) => {
         const newQuantity = Math.max(1, Math.min(5, quantity + change)); // Ensure quantity is between 1 and 5
@@ -101,21 +101,21 @@ const ProductDetails = () => {
     const handlePurchaseConfirm = async () => {
         try {
 
-            const amountInPaise = parseInt(totalPrice * 100); 
-    
-            
+            const amountInPaise = parseInt(totalPrice * 100);
+
+
             console.log(amountInPaise);
-    
-        
-            const orderUrl = 'http://localhost:3001/create-order';
+
+
+            const orderUrl = `${import.meta.env.VITE_BACKEND_API}/create-order`;
             const response = await axios.post(orderUrl, {
                 amount: amountInPaise,
-                currency: 'INR', 
+                currency: 'INR',
                 receipt: 'receipt#1'
             });
-    
+
             const { id, amount, currency } = response.data;
-    
+
             const options = {
                 key: 'rzp_test_pVMPiZnpHDsa6g',
                 amount: amount,
@@ -125,9 +125,9 @@ const ProductDetails = () => {
                 order_id: id,
                 handler: async (paymentResponse) => {
                     // Step 2: Verify payment
-                    const verifyUrl = 'http://localhost:3001/verify-payment';
+                    const verifyUrl = `${import.meta.env.VITE_BACKEND_API}/verify-payment`;
                     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = paymentResponse;
-    
+
                     const verifyResponse = await axios.post(verifyUrl, {
                         razorpay_order_id,
                         razorpay_payment_id,
@@ -138,9 +138,9 @@ const ProductDetails = () => {
                     // Step 3: Check if payment verification was successful
                     if (verifyResponse.data.status == 'success') {
                         const currentTime = new Date().toLocaleString();
-                        const name1=product.name
-                        let mobile1=(mobileNumber)
-                        let price=totalPrice
+                        const name1 = product.name
+                        let mobile1 = (mobileNumber)
+                        let price = totalPrice
                         console.log(mobile1)
                         console.log(currentTime)
                         console.log(name1)
@@ -148,14 +148,14 @@ const ProductDetails = () => {
                         // Step 4: Proceed to post purchase data after successful payment
                         await axios.post(`${import.meta.env.VITE_BACKEND_API}/buy-product/`, {
                             id: productId,
-                            name1 ,
+                            name1,
                             mobile1,
                             address: shippingAddress,
                             quantity,
-                            priceT:price,
-                            c:currentTime,
+                            priceT: price,
+                            c: currentTime,
                             email,
-                          });
+                        });
                         const templateParams = {
                             subject: "📢 Your Ordered Placed Confirmation Mail 📚",
                             message1: `Order Placed Successfully`,
@@ -178,15 +178,15 @@ const ProductDetails = () => {
                 },
                 prefill: {
                     name: 'Your Name',
-                    email: email, 
-                    contact: mobileNumber 
+                    email: email,
+                    contact: mobileNumber
                 },
                 theme: {
                     color: '#3399cc'
                 }
             };
-    
-           
+
+
             const rzp = new window.Razorpay(options);
             rzp.open();
         } catch (err) {
@@ -194,7 +194,7 @@ const ProductDetails = () => {
             toast.error('Something went wrong while initiating the purchase.'); // Notify user of the error
         }
     };
-    
+
 
 
 
