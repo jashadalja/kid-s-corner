@@ -104,7 +104,7 @@ const ProductDetails = () => {
             const amountInPaise = parseInt(totalPrice * 100); 
     
             
-            // console.log(amountInPaise);
+            console.log(amountInPaise);
     
         
             const orderUrl = 'http://localhost:3001/create-order';
