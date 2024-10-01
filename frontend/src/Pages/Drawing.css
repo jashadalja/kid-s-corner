@@ -1,0 +1,278 @@
+/* src/Pages/Drawing.css */
+
+/* Container Styling */
+.drawing-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #006699;
+  
+}
+
+/* Pencils Images */
+.pencils {
+  position: fixed;
+  top: -5%;
+  width: auto;
+  height: auto;
+  z-index: 10;
+}
+
+.pencils-right {
+  right: -80px;
+}
+
+.pencils-left {
+  left: -80px;
+}
+
+/* Hide Pencils on Small Devices */
+@media (max-width: 768px) {
+  .pencils {
+    display: none;
+  }
+}
+
+/* Back Button */
+.back-button {
+  position: absolute;
+  left: 15%;
+  top: -5px;
+  margin-left: 10px;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+@media (max-width: 768px) {
+  .back-button {
+    left: 10px;
+    top: 10px;
+    font-size: 30px;
+  }
+}
+
+/* Canvas Styling */
+.drawing-canvas {
+  border: 1px solid #000;
+  display: block;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px black;
+  width: 80%;
+  max-width: 800px;
+  height: 500px; /* Fixed height to maintain aspect ratio */
+  cursor: crosshair;
+}
+
+/* Controls Container */
+.controls {
+  margin: 20px auto;
+  width: 80%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+/* Color Palette */
+.color-palette {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.color-swatch.selected {
+  border: 4px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* New Color Button */
+.new-color-button {
+  background-color: #68b25b;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-shadow: 0 1px #6a845f;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.new-color-button:hover {
+  background-color: #5aa04e;
+}
+
+/* Color Select Panel */
+.color-select-panel {
+  background: #fff;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.new-color-display {
+  display: block;
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  margin: 0 auto 15px;
+}
+
+.color-sliders p {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.color-sliders label {
+  width: 50px;
+  font-size: 14px;
+  color: #6d574e;
+}
+
+.color-sliders input[type=range] {
+  flex: 1;
+}
+
+.add-color-button-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.add-color-button {
+  background-color: #fc4c4f;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.add-color-button:hover {
+  background-color: #e33b3c;
+}
+
+/* Canvas Controls */
+.canvas-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.clear-button,
+.download-button {
+  background-color: #68b25b;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-shadow: 0 1px #6a845f;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: 5px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.clear-button:hover,
+.download-button:hover {
+  background-color: #5aa04e;
+}
+
+/* Pen Size Control */
+.pen-size-control {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.pen-size-slider {
+  width: 100px;
+  margin-right: 10px;
+}
+
+.pen-size-display {
+  color: #000;
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .drawing-canvas {
+    width: 95%;
+    height: 300px; /* Reduced height for smaller screens */
+  }
+
+  .controls {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .color-select-panel {
+    max-width: 100%;
+  }
+
+  .color-palette {
+    justify-content: space-around;
+  }
+
+  .pen-size-control {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pen-size-slider {
+    width: 80%;
+    margin: 10px 0;
+  }
+
+  .canvas-controls {
+    flex-direction: column;
+  }
+
+  .clear-button,
+  .download-button {
+    width: 80%;
+    margin: 10px 0;
+  }
+
+  .back-button {
+    left: 10px;
+    top: 10px;
+    font-size: 30px;
+  }
+}

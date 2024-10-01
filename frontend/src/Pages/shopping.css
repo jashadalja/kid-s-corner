@@ -1,0 +1,32 @@
+.productsSection{
+    position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  background: url(../assets/header-bg.png) no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  z-index: 10000;
+  padding: 1.5rem 7%;
+  padding-bottom: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1;
+  /* background-color: aqua; */
+}
+
+.products{
+    margin-top: 10vh;
+}
+.choise1{
+    position: absolute;
+    top: 0;
+    right: -5rem;
+    background: var(--red);
+    color: #fff;
+    font-size: 1rem;
+    padding: .6rem 5.5rem;
+    transform: rotate(25deg);
+}
