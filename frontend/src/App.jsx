@@ -45,7 +45,7 @@ const App = () => {
         <Navbar />
 
               <Home />
-              <Animal />
+              <Animal/>
               <Stories />
               <Games />
               <Movies />
