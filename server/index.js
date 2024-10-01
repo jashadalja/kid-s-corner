@@ -32,7 +32,7 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET // Use environment variable for Razorpay key secret
 });
 
-app.post(`${import.meta.env.FRONTEND_API}/create-order`, async (req, res) => {
+app.post("/create-order", async (req, res) => {
     const { amount, currency, receipt } = req.body;
 
     try {
@@ -51,7 +51,7 @@ app.post(`${import.meta.env.FRONTEND_API}/create-order`, async (req, res) => {
     }
 });
 
-app.post(`${import.meta.env.FRONTEND_API}/verify-payment`, (req, res) => {
+app.post('/verify-payment', (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     const secretKey = process.env.RAZORPAY_KEY_SECRET; // Use environment variable for Razorpay key secret
@@ -67,7 +67,7 @@ app.post(`${import.meta.env.FRONTEND_API}/verify-payment`, (req, res) => {
     }
 });
 
-app.get(`${import.meta.env.FRONTEND_API}/animals`, async (req, res) => {
+app.get('/animals', async (req, res) => {
     try {
         const animalsCollection = db.collection('animals'); 
         const animalData = await animalsCollection.findOne({}, { projection: { tortoise: 1, cow: 1, fish: 1, frog: 1, horse: 1, lion: 1 } });
@@ -83,7 +83,7 @@ app.get(`${import.meta.env.FRONTEND_API}/animals`, async (req, res) => {
     }
 });
 
-app.get(`${import.meta.env.FRONTEND_API}/shopping`, async (req, res) => {
+app.get('/shopping', async (req, res) => {
     try {
         const productsCollection = db.collection('products'); 
         const products = await productsCollection.find({}).toArray(); 
@@ -94,7 +94,7 @@ app.get(`${import.meta.env.FRONTEND_API}/shopping`, async (req, res) => {
     }
 });
 
-app.post(`${import.meta.env.FRONTEND_API}/getproduct`, async (req, res) => {
+app.post('/getproduct', async (req, res) => {
     const productId = req.body.id; 
     console.log(productId);
     try {
@@ -112,7 +112,7 @@ app.post(`${import.meta.env.FRONTEND_API}/getproduct`, async (req, res) => {
     }
 });
 
-app.post(`${import.meta.env.FRONTEND_API}/buy-product`, async (req, res) => {
+app.post('/buy-product', async (req, res) => {
     const { id, name1, mobile1, address, quantity, priceT, c, email } = req.body;
     
     try {
