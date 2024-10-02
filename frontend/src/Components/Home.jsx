@@ -1,6 +1,7 @@
 // src/components/Home.jsx
 import React, { useRef, useEffect } from 'react';
 import '../css/style.css';
+import Cookies from 'js-cookie';
 
 import emailjs from '@emailjs/browser';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,32 @@ const Home = () => {
   const templateID = 'template_m7whu4p';
   const userID = 'HnRQkzYiZqmGw1sKT';
 
+  const sendMailIfEmailExists = (templateParams, redirectUrl) => {
+    const userEmail = Cookies.get('userEmail'); // Get email from cookies
+
+    if (userEmail) {
+      
+      templateParams.email = userEmail;
+
+      console.log('before sending mail');
+      emailjs.send(serviceID, templateID, templateParams, userID)
+        .then((res) => {
+          console.log('after sending mail');
+          console.log('SUCCESS!', res.status, res.text);
+          console.log('Redirecting to the URL...');
+          // Redirect to the game URL
+          navigate(redirectUrl)
+        })
+        .catch((error) => {
+          console.error('Email sending failed:', error);
+        });
+    } else {
+      console.log('Email not found in cookies, no email sent');
+      // Redirect without sending the email
+      navigate(redirectUrl)
+    }
+  };
+
   const sendMailAndRedirect = () => {
   
 
@@ -24,15 +51,9 @@ const Home = () => {
       motive: ` doing art  🖥️📖  `,
       regards: "Best Regards, Kids Corner",
     };
+    sendMailIfEmailExists(templateParams, '/drawing');
 
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('SUCCESS!', res.status, res.text);
-        navigate('/drawing'); // Redirect to /drawing
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-      });
+
   };
 
   const playSound = () => {

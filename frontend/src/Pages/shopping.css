@@ -30,3 +30,34 @@
     padding: .6rem 5.5rem;
     transform: rotate(25deg);
 }
+
+.back-button {
+    background-color: transparent; 
+    position: sticky;
+    z-index: 1100;
+  }
+  
+  
+  .custom-loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+  .custom-loader {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:8px dotted;
+    
+    border-color:#f53b57 ;
+    animation:s1 1s infinite;
+  }
+  @keyframes s1 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

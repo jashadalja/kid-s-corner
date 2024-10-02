@@ -4,6 +4,7 @@ import axios from 'axios';
 import './shopping.css'; // Make sure to import your styles
 import cardBg1 from '../assets/card-bg1.png';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Products = () => {
   const navigate = useNavigate();
@@ -38,54 +39,72 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  const handleBackClick = () => {
+    navigate('/')
+  }
+
   const handleBuy = (productId) => {
     console.log(productId);
     navigate(`/productdetails/${productId}`);
   };
 
-  if (loading) return <p>Loading...</p>;
+
+  if (loading) {
+    return (
+      <div class="custom-loader-container">
+    <div class="custom-loader"></div>
+</div>
+    );
+  }
   if (error) return <p>{error}</p>;
 
   return (
-    <section className="products movies" id="movies">
-      <div className='productsSection'>
-        <h1 className="heading">Products Of Kid's Corner</h1>
-      </div>
-      <div className="box-container">
-        {products.map((product, index) => (
-          <div key={index} className="box" style={{ background: `url(${cardBg1}) no-repeat` }}>
-            {/* Show "Out of stock" span and disable the button if stock is 0 */}
-            {product.stock_quantity === 0 && (
-              <span className="choise1">Out of stock</span>
-            )}
-            <div className="movie">
-              <img
-                src={product.img_url}
-                className='productImg'
-                style={{ height: '30vh', width: '22vw' }}
-                alt={product.name}
-              />
-              <p>{product.name}</p>
+    <div>
+    
+      <button className="back-button" onClick={handleBackClick}>
+        <i className="fas fa-arrow-left"></i>
+      </button>
+      <section className="products movies" id="movies">
+        <div className='productsSection'>
+          <h1 className="heading">Products Of Kid's Corner</h1>
+        </div>
+        <div className="box-container">
+          {products.map((product, index) => (
+            <div key={index} className="box" style={{ background: `url(${cardBg1}) no-repeat` }}>
+              {/* Show "Out of stock" span and disable the button if stock is 0 */}
+              {product.stock_quantity === 0 && (
+                <span className="choise1">Out of stock</span>
+              )}
+              <div className="movie">
+                <img
+                  src={product.img_url}
+                  className='productImg'
+                  style={{ height: '30vh', width: '22vw' }}
+                  alt={product.name}
+                />
+                <p>{product.name}</p>
+              </div>
+              <p>Description: {product.description}</p>
+              <p>Category: {product.category}</p>
+              <p>Price: {product.price.toFixed(2)}  rs</p>
+              {/* <p>Stock: {product.stock_quantity}</p> */}
+
+
+
+              {/* Buy button */}
+              <button
+                className='btn'
+                onClick={() => handleBuy(product._id)}
+                disabled={product.stock_quantity === 0} // Disable buy button if out of stock
+              >
+                Buy Product
+              </button>
             </div>
-            <p>Description: {product.description}</p>
-            <p>Category: {product.category}</p>
-            <p>Price: {product.price.toFixed(2)}  rs</p>
-            {/* <p>Stock: {product.stock_quantity}</p> */}
+          ))}
+        </div>
+      </section>
+    </div>
 
-
-
-            {/* Buy button */}
-            <button
-              className='btn'
-              onClick={() => handleBuy(product._id)}
-              disabled={product.stock_quantity === 0} // Disable buy button if out of stock
-            >
-              Buy Product
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import '../css/style.css'; // Adjust path to your CSS file
-
+import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 const Contact = () => {
@@ -19,8 +20,8 @@ const Contact = () => {
 
           <div className="box">
             <h3 className="title">Follow Us</h3>
-            <a href="https://www.instagram.com/______jash______/" className="fab fa-instagram">  instagram</a>
-            <a href="https://in.linkedin.com/in/jash-adalja-445472270" className="fab fa-linkedin">linkedin</a>
+            <a href="https://www.instagram.com/______jash______/" className="fab fa-instagram">  </a>
+            <a href="https://in.linkedin.com/in/jash-adalja-445472270" className="fab fa-linkedin"></a>
           </div>
         </div>
 

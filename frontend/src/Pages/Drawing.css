@@ -36,17 +36,7 @@
   }
 }
 
-/* Back Button */
-.back-button {
-  position: absolute;
-  left: 15%;
-  top: -5px;
-  margin-left: 10px;
-  color: white;
-  font-size: 40px;
-  cursor: pointer;
-  z-index: 20;
-}
+
 
 @media (max-width: 768px) {
   .back-button {
@@ -62,6 +52,7 @@
   display: block;
   margin: 20px auto;
   background: #fff;
+  position: relative;
   border-radius: 5px;
   box-shadow: 2px 2px 4px black;
   width: 80%;
@@ -276,3 +267,14 @@
     font-size: 30px;
   }
 }
+
+.back-button {
+  background-color: transparent; 
+  position: sticky;
+  z-index: 11000;
+  font-size: 40px;
+}
+
+
+
+

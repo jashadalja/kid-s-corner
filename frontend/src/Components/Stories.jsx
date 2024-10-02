@@ -1,105 +1,48 @@
 import React from 'react';
 import '../css/style.css'; // Adjust the path if necessary
-
-
-
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
+import Cookies from 'js-cookie'; // Importing js-cookie
 
 const Stories = () => {
-
   const navigate = useNavigate();
   const serviceID = 'service_2agyi6o';
   const templateID = 'template_m7whu4p';
   const userID = 'HnRQkzYiZqmGw1sKT';
 
-  const sendMailAndRedirectStory1 = () => {
+  // Function to check if userEmail is in cookies
+  
+  const userEmail= Cookies.get('userEmail')  // Adjust the cookie name as needed
+  
+
+  const sendMailAndRedirect = (motive, redirectPath) => {
+    if (userEmail==undefined) {
+      console.log('User email is not in cookies. Not sending mail.');
+      navigate(redirectPath); // Directly navigate without sending email
+      return;
+    }
+   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
+      email:userEmail,
       message1: "We hope you know about that. 🌟",
-      motive: "Reading Rabbit And Turtle Story  🖥️📖",
+      motive: motive,
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
+
+    console.log('before sending mail');
     emailjs.send(serviceID, templateID, templateParams, userID)
       .then((res) => {
-        console.log('after sennd ')
+        console.log('after sending');
         console.log('SUCCESS!', res.status, res.text);
         console.log('Redirecting to the URL...');
-       
-        navigate('/story1')
+        navigate(redirectPath);
       })
       .catch((error) => {
+        console.log(userEmail)
         console.error('Email sending failed:', error);
-
       });
   };
-  const sendMailAndRedirectStory2 = () => {
-
-    const templateParams = {
-      subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
-      message1: "We hope you know about that. 🌟",
-      motive: "Reading Thirsty Crow Story  🖥️📖",
-      regards: "Best Regards, Kids Corner",
-    };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-       
-        navigate('/story2')
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
-  };
-  const sendMailAndRedirectStory3 = () => {
-    const templateParams = {
-      subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
-      message1: "We hope you know about that. 🌟",
-      motive: "Reading Mouse And Lion Story 🖥️📖",
-      regards: "Best Regards, Kids Corner",
-    };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        
-        navigate('/story3')
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
-  };
-  const sendMailAndRedirectStory4 = () => {
-
-    const templateParams = {
-      subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
-      message1: "We hope you know about that. 🌟",
-      motive: " Reading Fox And Grapes Story 🖥️📖",
-      regards: "Best Regards, Kids Corner",
-    };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-       
-        navigate('/story4')
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
-  };
-
 
   return (
     <section className="stories background" id="stories">
@@ -107,17 +50,17 @@ const Stories = () => {
 
       <div className="box-container">
         {/* Rabbit and Tortoise */}
-        <button onClick={sendMailAndRedirectStory1}>
+        <button onClick={() => sendMailAndRedirect("Reading Rabbit And Turtle Story 🖥️📖", '/story1')}>
           <div className="box">
             <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/f_auto,q_auto/ucz1geiv4vicvtcaeiq9' alt="Rabbit and Tortoise" className="storiesimg" />
             <h3>Rabbit and Tortoise</h3>
             <span>Best</span>
-            <p>In a race between an overconfident one rabbit and an intelligent tortoise.   </p>
+            <p>In a race between an overconfident one rabbit and an intelligent tortoise.</p>
           </div>
         </button>
 
         {/* Thirsty Crow */}
-        <button onClick={sendMailAndRedirectStory2}>
+        <button onClick={() => sendMailAndRedirect("Reading Thirsty Crow Story 🖥️📖", '/story2')}>
           <div className="box">
             <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/f_auto,q_auto/tew2ufbuu5yd3bg8mph0' alt="Thirsty Crow" className="storiesimg" />
             <h3>Thirsty Crow</h3>
@@ -127,7 +70,7 @@ const Stories = () => {
         </button>
 
         {/* Mouse and Lion */}
-        <button onClick={sendMailAndRedirectStory3}>
+        <button onClick={() => sendMailAndRedirect("Reading Mouse And Lion Story 🖥️📖", '/story3')}>
           <div className="box">
             <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/f_auto,q_auto/lznwaxkgxhpc6ddotdtl' alt="Mouse and Lion" className="storiesimg" />
             <h3>Mouse and Lion</h3>
@@ -137,7 +80,7 @@ const Stories = () => {
         </button>
 
         {/* The Fox and Grapes */}
-        <button onClick={sendMailAndRedirectStory4}>
+        <button onClick={() => sendMailAndRedirect("Reading Fox And Grapes Story 🖥️📖", '/story4')}>
           <div className="box">
             <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/f_auto,q_auto/mdeahzo1utcparamhrvu' alt="The Fox and Grapes" className="storiesimg" />
             <h3>The Fox and Grapes</h3>

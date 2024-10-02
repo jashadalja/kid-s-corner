@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './ProductDetails.css';
 import emailjs from '@emailjs/browser';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 const ProductDetails = () => {
 
     const navigate = useNavigate()
@@ -50,6 +51,9 @@ const ProductDetails = () => {
         fetchProduct();
     }, [productId]);
 
+    const handleBackClick=()=>{
+        navigate('/shopping')
+    }
 
     const handleQuantityChange = (change) => {
         const newQuantity = Math.max(1, Math.min(5, quantity + change)); // Ensure quantity is between 1 and 5
@@ -67,25 +71,24 @@ const ProductDetails = () => {
         setShowEmailInput(false);
         setShowOtpInput(true);
 
-
-
         const templateParams = {
             subject: "📢 OTP For Purchase Product From Kid's Corner 📚",
+            email: `${email}`, 
             message1: `${otp}`,
             motive: `ordering a ${product.name} from Kid's Corner. Your OTP : ${otp}`, // Include OTP in motive
             regards: "Best Regards, Kids Corner",
         };
-        console.log('before sending mail')
+        
+        console.log('before sending mail');
         emailjs.send(serviceID, templateID, templateParams, userID)
             .then((res) => {
-                console.log('after sennd ')
+                console.log('after sending');
                 console.log('SUCCESS!', res.status, res.text);
-                toast.success(`OTP sent on : ${email}`); // Display the OTP using toast
-
+                toast.success(`OTP sent to : ${email}`); // Display the OTP success message
             })
             .catch((error) => {
                 console.error('Email sending failed:', error);
-                toast.error("Some thing went wrong in otp sending")
+                toast.error("Something went wrong in OTP sending");
             });
     };
 
@@ -199,18 +202,32 @@ const ProductDetails = () => {
 
 
 
-
-
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return (
+            <div className="skeleton-card">
+                <div className="skeleton-image"></div>
+                <div className="skeleton-title"></div>
+                <div className="skeleton-text"></div>
+                <div className="skeleton-text"></div>
+                <div className="skeleton-price"></div>
+                <div className="skeleton-quantity"></div>
+                <div className="skeleton-button"></div>
+            </div>
+        );
     }
-
+    
     if (error) {
         return <div className="error">{error}</div>;
     }
+    
 
     return (
+        <div>
+                <button className="back-button" onClick={handleBackClick}>
+        <i className="fas fa-arrow-left"></i>
+    </button>
         <div className="product-details-card">
+              
             {product ? (
                 <div className="card">
                     <img src={product.img_url} alt={product.name} className="product-details-image" />
@@ -253,6 +270,7 @@ const ProductDetails = () => {
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                style={{ fontFamily: 'Arial, sans-serif', textTransform:'lowercase' }}
                             />
                             <button className="confirm-email-button" onClick={handleEmailSubmit}>Confirm Email</button>
                         </div>
@@ -295,7 +313,7 @@ const ProductDetails = () => {
                 <div>Product not found</div>
             )}
             <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
-        </div>
+        </div></div>
     );
 };
 

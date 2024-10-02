@@ -1,11 +1,8 @@
-
 import React, { useRef, useState, useEffect } from 'react';
-
 import './Drawing.css'; 
 import { useNavigate } from 'react-router-dom';
-const Drawing = () => {
 
-  const navigate = useNavigate();
+const Drawing = () => {
   const canvasRef = useRef(null);
   const [color, setColor] = useState('#ff0000'); // Default to red
   const [colors, setColors] = useState(['#ffffff', '#ff0000', '#0000ff', '#ffff00']); // white, red, blue, yellow
@@ -16,12 +13,12 @@ const Drawing = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
 
-  // Set background color on mount
   useEffect(() => {
-    // document.body.style.background = "#006699";
     initializeCanvas();
     window.addEventListener('resize', initializeCanvas);
-    return () => window.removeEventListener('resize', initializeCanvas);
+    return () => {
+      window.removeEventListener('resize', initializeCanvas);
+    };
   }, []);
 
   // Initialize and resize the canvas
@@ -29,20 +26,16 @@ const Drawing = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
 
-    // Get the device pixel ratio, falling back to 1.
+    // Get the device pixel ratio
     const dpr = window.devicePixelRatio || 1;
-
-    // Get the size of the canvas in CSS pixels.
     const rect = canvas.getBoundingClientRect();
 
-    // Set the size of the canvas in device pixels.
+    // Set canvas dimensions
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
 
-    // Scale the context to ensure correct drawing operations.
+    // Scale the context
     context.scale(dpr, dpr);
-
-    // Fill the canvas with white background.
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, rect.width, rect.height);
   };
@@ -52,29 +45,35 @@ const Drawing = () => {
     const rect = canvasRef.current.getBoundingClientRect();
     setLastPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     setIsDrawing(true);
+    e.preventDefault(); // Prevent scrolling
+    window.addEventListener('mousewheel', preventScroll);
   };
 
   const handleMouseMove = (e) => {
     if (!isDrawing) return;
     drawLine(e.clientX, e.clientY);
+    e.preventDefault(); // Prevent scrolling
   };
 
   const handleMouseUp = () => {
     setIsDrawing(false);
+    window.removeEventListener('mousewheel', preventScroll);
   };
 
   const handleMouseLeave = () => {
     setIsDrawing(false);
+    window.removeEventListener('mousewheel', preventScroll);
   };
 
   // Touch Event Handlers
   const handleTouchStart = (e) => {
     e.preventDefault(); // Prevent scrolling
-    if (e.touches.length !== 1) return; // Only handle single touch
+    if (e.touches.length !== 1) return;
     const touch = e.touches[0];
     const rect = canvasRef.current.getBoundingClientRect();
     setLastPos({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
     setIsDrawing(true);
+    window.addEventListener('touchmove', preventScroll, { passive: false });
   };
 
   const handleTouchMove = (e) => {
@@ -86,6 +85,12 @@ const Drawing = () => {
 
   const handleTouchEnd = () => {
     setIsDrawing(false);
+    window.removeEventListener('touchmove', preventScroll);
+  };
+
+  // Prevent scrolling
+  const preventScroll = (e) => {
+    e.preventDefault();
   };
 
   // Unified Drawing Function
@@ -170,14 +175,10 @@ const Drawing = () => {
         alt="Pencils Left" 
         className="pencils pencils-left"
       />
-
-      {/* Back Button */}
-      <div 
-        className="back-button"
-        onClick={() => window.history.back()}
-      >
-        &#129136;
-      </div>
+     
+      <button className="back-button" onClick={() => window.history.back()}>
+        <i className="fas fa-arrow-left"></i>
+      </button>
 
       {/* Canvas */}
       <canvas

@@ -1,184 +1,102 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import Cookies from 'js-cookie';
 import '../css/style.css'; // Adjust the path if necessary
-
 import { useNavigate } from 'react-router-dom';
-
 import emailjs from '@emailjs/browser';
 
-
 const Games = () => {
-  // Event handler functions for redirection
   const navigate = useNavigate();
-
+  
 
   const serviceID = 'service_2agyi6o';
   const templateID = 'template_m7whu4p';
   const userID = 'HnRQkzYiZqmGw1sKT';
+  // Helper function to send an email only if user email is in cookies
+  const sendMailIfEmailExists = (templateParams, redirectUrl) => {
+    const userEmail = Cookies.get('userEmail'); // Get email from cookies
 
+    if (userEmail) {
+      
+      templateParams.email = userEmail;
+
+      console.log('before sending mail');
+      emailjs.send(serviceID, templateID, templateParams, userID)
+        .then((res) => {
+          console.log('after sending mail');
+          console.log('SUCCESS!', res.status, res.text);
+          console.log('Redirecting to the URL...');
+          // Redirect to the game URL
+          window.location.href = redirectUrl;
+        })
+        .catch((error) => {
+          console.error('Email sending failed:', error);
+        });
+    } else {
+      console.log('Email not found in cookies, no email sent');
+      // Redirect without sending the email
+      window.location.href = redirectUrl;
+    }
+  };
+
+  // Each game click handler function with specific template params and redirect URL
   const sendMailAndRedirectGame1 = () => {
-
-
-
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
       motive: "Playing Addition Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/addsub/addsub-ladder';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/addsub/addsub-ladder');
   };
 
-
-
   const sendMailAndRedirectGame2 = () => {
-   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
       motive: "Playing Noun Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/ela/nounsort/?sn=ela1';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/ela/nounsort/?sn=ela1');
   };
 
   const sendMailAndRedirectGame3 = () => {
-   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
       motive: "Playing Clock Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/geometry/match-clocks/?mg=k';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/geometry/match-clocks/?mg=k');
   };
 
   const sendMailAndRedirectGame4 = () => {
-   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
-      motive: "Playing Puzzels Game  🖥️📖",
+      motive: "Playing Puzzles Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/geometry/puzzles-easy/?mg=k';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/geometry/puzzles-easy/?mg=k');
   };
 
   const sendMailAndRedirectGame5 = () => {
-   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
       motive: "Playing Monkey Mash Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/addsub/monkey-mash/?sn=math2';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/addsub/monkey-mash/?sn=math2');
   };
 
   const sendMailAndRedirectGame6 = () => {
-   
     const templateParams = {
       subject: " 📢 Notification: Your Child Is Accessing Kids Corner Website for Learning 📚",
       message1: "We hope you know about that. 🌟",
-      motive: "Playing Maching The Cards Game  🖥️📖",
+      motive: "Playing Matching Cards Game  🖥️📖",
       regards: "Best Regards, Kids Corner",
     };
-    console.log('before sending mail')
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((res) => {
-        console.log('after sennd ')
-        console.log('SUCCESS!', res.status, res.text);
-        console.log('Redirecting to the URL...');
-        // Create an anchor element for navigation
-        const link = document.createElement('a');
-        link.href = 'https://www.starfall.com/h/multdiv/mult03xb/?sn=math2';
-        link.target = '_self'; // Open in a new tab (optional)
-        link.rel = 'noopener noreferrer'; // For security
-        link.click(); // Programmatically click the link
-      })
-      .catch((error) => {
-        console.error('Email sending failed:', error);
-
-      });
+    sendMailIfEmailExists(templateParams, 'https://www.starfall.com/h/multdiv/mult03xb/?sn=math2');
   };
 
   return (
@@ -188,21 +106,18 @@ const Games = () => {
       <div className="box-container">
         {/* Game 1 */}
         <div className="box">
-
-
           <button onClick={sendMailAndRedirectGame1}>
             <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/v1727415611/jobol00oeyzmsqjtuyoa.png' alt="Addition and Subtraction" />
             <div className="info">
               <h3>Addition and Subtraction</h3>
             </div>
           </button>
-
         </div>
 
         {/* Game 2 */}
         <div className="box">
           <button onClick={sendMailAndRedirectGame2}>
-            <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/v1727415604/fdrczumrga77akouwvo4.png'alt="What is noun" />
+            <img src='https://res.cloudinary.com/dhv21yr2v/image/upload/v1727415604/fdrczumrga77akouwvo4.png' alt="What is noun" />
             <div className="info">
               <h3>What is noun</h3>
             </div>
@@ -253,4 +168,4 @@ const Games = () => {
   );
 };
 
-export default Games
+export default Games;

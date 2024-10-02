@@ -28,7 +28,7 @@ function Story3() {
     return (
         <div className="flipbook-container">
             <h1 className='storyHeading'>Story : The Lion And The Mouse</h1>
-            <div className="back-button" onClick={() => window.history.back()}>&#129136;</div>
+            <div className="back-button1" onClick={() => window.history.back()}><i className="fas fa-arrow-left"></i></div>
             <HTMLFlipBook width={450} height={528} >
                 {
                     [...Array(numPages).keys()].map((pg) => (

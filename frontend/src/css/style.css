@@ -817,3 +817,96 @@ header .navbar a:hover {
 
 
 
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+.popup h2 {
+  margin-bottom: 20px;
+  color: var(--red);
+}
+
+.popup input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-transform: lowercase;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-buttons .continuebutton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--red);
+}
+.skipbutton{
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.popup-buttons button:hover {
+  background: #f0f0f0;
+}
+
+.blurred {
+  filter: blur(5px); /* Adjust the blur level as needed */
+  pointer-events: none; /* Disable interactions */
+}
+
+/* You can also apply some styles to the popup to center it and overlay it properly */
+.EmailPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensure it appears above other components */
+  background: white; /* Background color for the popup */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.back-button1 {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-size: 40px;
+  color: rgb(3, 3, 3);
+  cursor: pointer;
+}
+
+.back-button {
+  background-color: transparent; 
+  position: sticky;
+  z-index: 11000;
+}
+

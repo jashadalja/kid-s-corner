@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -20,6 +21,7 @@
     "emailjs-com": "^3.2.0",
     "express": "^4.21.0",
     "jquery": "^3.7.1",
+    "js-cookie": "^3.0.5",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "razorpay": "^2.9.4",
