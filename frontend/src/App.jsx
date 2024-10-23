@@ -10,7 +10,7 @@ import Movies from './Components/Movies';
 import Contact from './Components/Contact';
 import Footer from './Components/Footer';
 import Drawing from './Pages/Drawing';
-
+import { Analytics } from "@vercel/analytics/react"
 import Story1 from './Pages/Story1';
 import Story2 from './Pages/Story2';
 import Story3 from './Pages/Story3';
@@ -30,10 +30,10 @@ import './css/style.css';
 const App = () => {
   const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
   const [isBlurred, setIsBlurred] = useState(false);
-  var nextPopup=5000
+  var nextPopup = 5000
   // Close the popup and remove the blur effect
   const closePopup = () => {
-    setShowPopup(false); 
+    setShowPopup(false);
     setIsBlurred(false);
   };
 
@@ -46,7 +46,7 @@ const App = () => {
       const timer = setTimeout(() => {
         setShowPopup(true);
         setIsBlurred(true); // Set background blur when popup is shown
-        nextPopup+=nextPopup+5000
+        nextPopup += nextPopup + 5000
       }, nextPopup); // 5 seconds delay
 
       // Clean up the timer
@@ -73,7 +73,7 @@ const App = () => {
                 <Footer />
               </>
             } />
-            
+
             {/* Other Routes */}
             <Route path="/drawing" element={<Drawing />} />
             <Route path="/story1" element={<Story1 />} />
@@ -93,7 +93,7 @@ const App = () => {
           {/* Show the popup only if showPopup is true */}
         </div>
       </Router>
-      
+
       {/* Toast Container for notifications */}
       <ToastContainer position="bottom-right" />
 
@@ -101,6 +101,7 @@ const App = () => {
       <div>
         {showPopup && <EmailPopup onClose={closePopup} />}
       </div>
+      <Analytics />
     </>
   );
 };
