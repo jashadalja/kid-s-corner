@@ -50,6 +50,7 @@ const razorpay = new Razorpay({
 
 // API endpoint to create an order
 app.post("/create-order", async (req, res) => {
+  console.log('creating order')
   const { amount, currency } = req.body;
 
   try {
