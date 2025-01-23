@@ -55,7 +55,7 @@ app.post("/create-order", async (req, res, next) => {
 
 app.post("/verify-payment", (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-  const secretKey = "0ZiI8iZ185Dx20ZY9S1Mck12";
+  const secretKey = key_secret;
   
   const hmac = crypto.createHmac("sha256", secretKey);
   hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
