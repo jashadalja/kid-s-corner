@@ -120,7 +120,7 @@ const ProductDetails = () => {
             const { id, amount, currency } = response.data;
 
             const options = {
-                key: import.meta.env.RAZORPAY_KEY_ID,   // razor pay key id ....
+                key: 'rzp_test_LvPiUPXOnIrlPI',   // razor pay key id ....
                 amount: amount,
                 currency,
                 name: "Kid's Corner",
