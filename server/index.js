@@ -27,11 +27,11 @@ async function initializeDB() {
   }
 }
 
-// Razorpay setup
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// // Razorpay setup
+// const razorpay = new Razorpay({
+//   key_id: process.env.RAZORPAY_KEY_ID,
+//   key_secret: process.env.RAZORPAY_KEY_SECRET,
+// });
 
 // Middleware to ensure DB connection
 function ensureDBConnection(req, res, next) {
@@ -41,31 +41,44 @@ function ensureDBConnection(req, res, next) {
   next();
 }
 
-// Routes
-app.post("/create-order", async (req, res, next) => {
-  const { amount, currency, receipt } = req.body;
+
+// Razorpay setup
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID, // Razorpay Key ID
+  key_secret: process.env.RAZORPAY_KEY_SECRET, // Razorpay Secret Key
+});
+
+// API endpoint to create an order
+app.post("/create-order", async (req, res) => {
+  const { amount, currency } = req.body;
 
   try {
-    const order = await razorpay.orders.create({ amount, currency, receipt });
+    const order = await razorpay.orders.create({
+      amount: amount * 100, // Amount in paise
+      currency: currency,
+    });
     res.json(order);
   } catch (error) {
-    next(error);  // Pass error to global error handler
+    console.error("Error creating Razorpay order:", error);
+    res.status(500).json({ error: "Failed to create order" });
   }
 });
 
+// API endpoint to verify payment
 app.post("/verify-payment", (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-  const secretKey = key_secret;
-  
+  const secretKey = process.env.RAZORPAY_KEY_SECRET; //  Razorpay Secret Key
+
+  // Generate HMAC
   const hmac = crypto.createHmac("sha256", secretKey);
   hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-  
   const generated_signature = hmac.digest("hex");
 
+  // Compare signatures
   if (generated_signature === razorpay_signature) {
-    res.json({ status: "success" });
+    res.json({ status: "success", message: "Payment verified successfully" });
   } else {
-    res.json({ status: "failure" });
+    res.status(400).json({ status: "failure", message: "Payment verification failed" });
   }
 });
 

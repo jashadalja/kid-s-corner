@@ -51,7 +51,7 @@ const ProductDetails = () => {
         fetchProduct();
     }, [productId]);
 
-    const handleBackClick=()=>{
+    const handleBackClick = () => {
         navigate('/shopping')
     }
 
@@ -73,12 +73,12 @@ const ProductDetails = () => {
 
         const templateParams = {
             subject: "📢 OTP For Purchase Product From Kid's Corner 📚",
-            email: `${email}`, 
+            email: `${email}`,
             message1: `${otp}`,
             motive: `ordering a ${product.name} from Kid's Corner. Your OTP : ${otp}`, // Include OTP in motive
             regards: "Best Regards, Kids Corner",
         };
-        
+
         console.log('before sending mail');
         emailjs.send(serviceID, templateID, templateParams, userID)
             .then((res) => {
@@ -104,7 +104,7 @@ const ProductDetails = () => {
     const handlePurchaseConfirm = async () => {
         try {
 
-            const amountInPaise = parseInt(totalPrice * 100);
+            const amountInPaise = parseInt(totalPrice * 1);
 
 
             console.log(amountInPaise);
@@ -120,7 +120,7 @@ const ProductDetails = () => {
             const { id, amount, currency } = response.data;
 
             const options = {
-                key: 'rzp_test_pVMPiZnpHDsa6g',
+                key: import.meta.env.RAZORPAY_KEY_ID,   // razor pay key id ....
                 amount: amount,
                 currency,
                 name: "Kid's Corner",
@@ -161,6 +161,7 @@ const ProductDetails = () => {
                         });
                         const templateParams = {
                             subject: "📢 Your Ordered Placed Confirmation Mail 📚",
+                            email: `${email}`,
                             message1: `Order Placed Successfully`,
                             motive: `ordered a ${product.name} from Kid's Corner. Your product will receive shortly at your given address`,
                             regards: "Best Regards, Kids Corner",
@@ -215,105 +216,114 @@ const ProductDetails = () => {
             </div>
         );
     }
-    
+
     if (error) {
         return <div className="error">{error}</div>;
     }
-    
+
 
     return (
         <div>
-                <button className="back-button" onClick={handleBackClick}>
-        <i className="fas fa-arrow-left"></i>
-    </button>
-        <div className="product-details-card">
-              
-            {product ? (
-                <div className="card">
-                    <img src={product.img_url} alt={product.name} className="product-details-image" />
-                    <h2 className="product-title">{product.name}</h2>
-                    <p className="product-description">{product.description}</p>
-                    <p className="product-category">Category: {product.category}</p>
-                    <p className="product-price">Price: {product.price.toFixed(2)}  rs</p>
-                    {/* <p className="product-stock">Stock Quantity: {product.stock_quantity}</p> */}
+            <button className="back-button" onClick={handleBackClick}>
+                <i className="fas fa-arrow-left"></i>
+            </button>
+            <div className="product-details-card">
 
-                    {/* Quantity Selector with Plus and Minus Buttons */}
-                    <div className="quantity-section">
-                        <label className="quantity-label">Quantity:</label>
-                        <div className="quantity-controls">
-                            <button
-                                className="quantity-btn"
-                                onClick={() => handleQuantityChange(-1)}
-                                disabled={quantity <= 1} // Disable minus button if quantity is 1
-                            >
-                                -
-                            </button>
-                            <span className="quantity">{quantity}</span>
-                            <button
-                                className="quantity-btn"
-                                onClick={() => handleQuantityChange(1)}
-                                disabled={quantity >= Math.min(5, product.stock_quantity)} // Disable plus button if at max stock or 5
-                            >
-                                +
-                            </button>
+                {product ? (
+                    <div className="card">
+                        <img src={product.img_url} alt={product.name} className="product-details-image" />
+                        <h2 className="product-title">{product.name}</h2>
+                        <p className="product-description">{product.description}</p>
+                        <p className="product-category">Category: {product.category}</p>
+                        <p className="product-price">Price: {product.price.toFixed(2)}  rs</p>
+                        {/* <p className="product-stock">Stock Quantity: {product.stock_quantity}</p> */}
+
+                        {/* Quantity Selector with Plus and Minus Buttons */}
+                        <div className="quantity-section">
+                            <label className="quantity-label">Quantity:</label>
+                            <div className="quantity-controls">
+                                <button
+                                    className="quantity-btn"
+                                    onClick={() => handleQuantityChange(-1)}
+                                    disabled={quantity <= 1} // Disable minus button if quantity is 1
+                                >
+                                    -
+                                </button>
+                                <span className="quantity">{quantity}</span>
+                                <button
+                                    className="quantity-btn"
+                                    onClick={() => handleQuantityChange(1)}
+                                    disabled={quantity >= Math.min(5, product.stock_quantity)} // Disable plus button if at max stock or 5
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <p className="total-price">Total Price: {totalPrice.toFixed(2)}  rs</p>
                         </div>
-                        <p className="total-price">Total Price: {totalPrice.toFixed(2)}  rs</p>
+
+                        <button className="buy-button" onClick={handleBuyClick}>Next</button>
+
+                        {showEmailInput && (
+                            <div className="input-section">
+                                <input
+                                    type="email"
+                                    className="email-input"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    style={{ fontFamily: 'Arial, sans-serif', textTransform: 'lowercase' }}
+                                />
+                                <button className="confirm-email-button" onClick={handleEmailSubmit}>Confirm Email</button>
+                            </div>
+                        )}
+
+                        {showOtpInput && (
+                            <div className="input-section">
+                                <input
+                                    type="text"
+                                    className="otp-input"
+                                    placeholder="Enter OTP"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                />
+                                <button className="verify-otp-button" onClick={handleOtpSubmit}>Verify OTP</button>
+                            </div>
+                        )}
+
+                        {showDetailsInput && (
+                            <div className="input-section">
+                                <input
+                                    type="text"
+                                    className="mobile-input"
+                                    placeholder="Mobile Number"
+                                    value={mobileNumber}
+                                    onChange={(e) => setMobileNumber(e.target.value)}
+
+                                />
+                                <input
+                                    type="text"
+                                    className="address-input"
+                                    placeholder="Shipping Address"
+                                    value={shippingAddress}
+                                    onChange={(e) => setShippingAddress(e.target.value)}
+                                />
+                                <button className="buy-confirm-button" onClick={() => {
+                                    if (!mobileNumber.trim() || !shippingAddress.trim()) {
+                                        toast.error('Please enter your mobile number and adress');
+                                        return;
+                                    }
+                                    else {
+                                        handlePurchaseConfirm();
+                                    }
+                                }}>Buy This Item</button>
+                            </div>
+                        )}
                     </div>
-
-                    <button className="buy-button" onClick={handleBuyClick}>Next</button>
-
-                    {showEmailInput && (
-                        <div className="input-section">
-                            <input
-                                type="email"
-                                className="email-input"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                style={{ fontFamily: 'Arial, sans-serif', textTransform:'lowercase' }}
-                            />
-                            <button className="confirm-email-button" onClick={handleEmailSubmit}>Confirm Email</button>
-                        </div>
-                    )}
-
-                    {showOtpInput && (
-                        <div className="input-section">
-                            <input
-                                type="text"
-                                className="otp-input"
-                                placeholder="Enter OTP"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                            />
-                            <button className="verify-otp-button" onClick={handleOtpSubmit}>Verify OTP</button>
-                        </div>
-                    )}
-
-                    {showDetailsInput && (
-                        <div className="input-section">
-                            <input
-                                type="text"
-                                className="mobile-input"
-                                placeholder="Mobile Number"
-                                value={mobileNumber}
-                                onChange={(e) => setMobileNumber(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                className="address-input"
-                                placeholder="Shipping Address"
-                                value={shippingAddress}
-                                onChange={(e) => setShippingAddress(e.target.value)}
-                            />
-                            <button className="buy-confirm-button" onClick={handlePurchaseConfirm}>Buy This Item</button>
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div>Product not found</div>
-            )}
-            <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
-        </div></div>
+                ) : (
+                    <div>Product not found</div>
+                )}
+                <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
+            </div></div>
     );
 };
 
